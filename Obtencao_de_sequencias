@@ -1,0 +1,22 @@
+#########################################################################################
+#Script para obtenção de sequências de resíduos de aminoácidos a partir de uma lista com#
+#códigos de identificação (ID) específicos, utilizando a biblioteca SeqIO do Biopython. #
+#########################################################################################
+
+from Bio import SeqIO
+fasta_file = "proteoma.fasta" # arquivo contendo o proteoma
+wanted_file = "ids.txt" # arquivo com os códigos de identificação das sequências desejadas
+result_file = "output.fasta" # output com as sequências obtidas
+
+wanted = set()
+with open(wanted_file) as f:
+  for line in f:
+    line = line.strip()
+    if line != "":
+      wanted.add(line)
+
+fasta_sequences = SeqIO.parse(open(fasta_file),"fasta")
+with open(result_file, "w") as f:
+  for seq in fasta_sequences:
+    if seq.description in wanted:
+      SeqIO.write([seq], f, "fasta")
